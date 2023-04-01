@@ -1,0 +1,54 @@
+.navbar{
+    background: $navBack;
+    min-height: 3.5rem;
+    font-size: 1.25rem;
+    color: $navColor;
+
+    &__items{
+        display: flex;
+        flex-direction: row;
+        
+        li{
+            &.navActive{
+                transition: background-color ease .3s, color ease .3s;
+                background-color: $navHover;
+                a:hover{
+                    color: white;
+                }
+            }
+            a{
+                display: block; // TODO : c'est pas centré verticallement
+                width: max-content;
+                height: calc(100% - 2rem);
+                padding: 1rem;
+                &:hover{
+                    transition: color ease .3s;
+                    color: $navHover;
+                }
+            }
+            button{
+                background: $navHover;
+                padding: 1rem;
+                border-radius: 5px;
+                font-size: 16px;
+                font-weight: 600;
+                color: white;
+                height: 85%;
+                margin-top: 3px;
+                scale: 1;
+                cursor: pointer;
+                margin-left: 1rem;
+                &:hover{
+                    scale: 1.05;
+                    transition: scale ease .3s;
+                }
+            }
+        }
+
+        &#item0{
+            font-size: 1.75rem;
+            font-weight: bold;
+            padding-right: 1.5rem;
+        }
+    }
+}

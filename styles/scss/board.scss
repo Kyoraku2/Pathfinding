@@ -1,0 +1,16 @@
+.board{
+    border: 1px solid black;
+    height: 75vh;
+    width: 99.5vw;
+    margin: 1rem .25rem;
+
+    td{
+        border: 1px solid $boardBorder;
+        width: 25px;
+        height: 25px;
+        cursor: pointer;
+        &:hover{
+            background: $boardHover;
+        }
+    }
+}
