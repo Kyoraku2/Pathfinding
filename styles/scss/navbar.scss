@@ -1,40 +1,100 @@
 .navbar{
     background: $navBack;
-    min-height: 3.5rem;
+    height: $navHeight;
     font-size: 1.25rem;
     color: $navColor;
+    display: flex;
+    justify-content: space-between;
+
+    &__cellsTypes{
+        display: flex;
+        padding-right: 1rem;
+        label{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 0.25rem;
+            height: $navHeight;
+            font-size: 1rem;
+            border-right: 1px dotted rgb(107, 107, 107);
+            &:first-of-type{
+                border-left: 1px dotted rgb(107, 107, 107);
+            }   
+            cursor: pointer;
+            &:hover{
+                transition: color ease .3s;
+                color: $highlight;
+                background: lighten($color: $navBack, $amount: 3);
+            }
+            &:nth-of-type(1), &:nth-of-type(2), &:nth-of-type(3), &:nth-of-type(4){
+                &::after{
+                    content: '';
+                    width: $cellWidth;
+                    height: $cellHeight;
+                    margin-left: 0.5rem;
+                    border: 1px solid #fff;
+                }
+            }
+            &:nth-of-type(1){
+                &::after{
+                    background: $cellWallColor;
+                }
+            }
+            &:nth-of-type(2){
+                &::after{
+                    background: $cellStartColor;
+                }
+            }
+            &:nth-of-type(3){
+                &::after{
+                    background: $cellCheckpointColor;
+                }
+            }
+            &:nth-of-type(4){
+                &::after{
+                    background: $cellEndColor;
+                }
+            }
+            &~:checked{
+                color: $highlight;
+            }
+        }
+        input{
+            display: none;
+            &:checked + label{
+                color: $highlight;
+            }
+        }
+    }
 
     &__items{
         display: flex;
         flex-direction: row;
+        align-items: center;
         
         li{
-            &.navActive{
-                transition: background-color ease .3s, color ease .3s;
-                background-color: $navHover;
-                a:hover{
-                    color: white;
-                }
-            }
             a{
-                display: block; // TODO : c'est pas centré verticallement
+                display: flex; // TODO : c'est pas centré verticallement
                 width: max-content;
-                height: calc(100% - 2rem);
-                padding: 1rem;
+                height: $navHeight;
+                align-items: center;
+                justify-content: center;
+                padding: 0 1rem;
+
                 &:hover{
                     transition: color ease .3s;
-                    color: $navHover;
+                    color: $highlight;
+                    background: lighten($color: $navBack, $amount: 3);
                 }
             }
             button{
-                background: $navHover;
+                background: $highlight;
                 padding: 1rem;
                 border-radius: 5px;
                 font-size: 16px;
                 font-weight: 600;
                 color: white;
                 height: 85%;
-                margin-top: 3px;
                 scale: 1;
                 cursor: pointer;
                 margin-left: 1rem;
@@ -45,10 +105,16 @@
             }
         }
 
-        &#item0{
+        & #item0{
             font-size: 1.75rem;
             font-weight: bold;
-            padding-right: 1.5rem;
+            padding-right: 0.5rem;
+        }
+
+        & #item3{
+            span{
+                margin-left: 0.5rem;
+            }
         }
     }
 }

@@ -1,16 +1,72 @@
+.wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - $footerHeight - $navHeight);
+    width: 100vw;
+}
+
 .board{
     border: 1px solid black;
-    height: 75vh;
-    width: 99.5vw;
-    margin: 1rem .25rem;
+    height: calc(100vh - $footerHeight - $navHeight - $cellHeight);
+    width: 100%;
 
     td{
+        user-select: none;
         border: 1px solid $boardBorder;
-        width: 25px;
-        height: 25px;
+        width: $cellWidth;
+        height: $cellHeight;
+        max-width: $cellWidth;
+        max-height: $cellHeight;
         cursor: pointer;
+        background-repeat: no-repeat;
+        transition: ease-in-out background-size .25s;
+        background-position: 50% 50%;
+        background-size: 0% 0%;
+
         &:hover{
-            background: $boardHover;
+            background-image: linear-gradient($boardHover, $boardHover);
+            background-size: 100% 100%;
         }
     }
+}
+
+td.wall, .wall{
+    background-image: linear-gradient($cellWallColor, $cellWallColor);
+    background-size: 100% 100%;
+}
+
+td.start, .start{
+    background-image: linear-gradient($cellStartColor, $cellStartColor);
+    background-size: 100% 100%;
+}
+
+td.end, .end{
+    background-image: linear-gradient($cellEndColor, $cellEndColor);
+    background-size: 100% 100%;
+}
+
+td.checkpoint, .checkpoint{
+    background-image: linear-gradient($cellCheckpointColor, $cellCheckpointColor);
+    background-size: 100% 100%;
+    color: white;
+    font-weight: bold;
+    font-size: .75rem;
+    text-align: center;
+    line-height: $cellHeight;
+}
+
+td.path, .path{
+    background-image: linear-gradient($cellPathColor, $cellPathColor);
+    background-size: 100% 100%;
+}
+
+td.visited, .visited{
+    background-image: linear-gradient($cellVisitedColor, $cellVisitedColor);
+    background-size: 100% 100%;
+}
+
+td.visiting, .visiting{
+    background-image: linear-gradient($cellVisitingColor, $cellVisitingColor);
+    background-size: 100% 100%;
 }
