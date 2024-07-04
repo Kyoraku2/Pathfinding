@@ -1,118 +1,159 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="description" content="PathFinder">
-    <meta name="keywords" content="PathFinder, Path, Finder, Algorithm, Maze, Visualize, Dijkstra, A*, BFS, DFS, Greedy, Best, First,Chemin, Trouver, Algorithme, Labyrinthe, Visualiser, Glouton, Meilleur, Premier"/>
-    <meta name="author" content="Tayeb HAKKAR">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="PathFinder" />
+    <meta
+      name="keywords"
+      content="PathFinder, Path, Finder, Algorithm, Maze, Visualize, Dijkstra, A*, BFS, DFS, Greedy, Best, First,Chemin, Trouver, Algorithme, Labyrinthe, Visualiser, Glouton, Meilleur, Premier"
+    />
+    <meta name="author" content="Tayeb HAKKAR" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PathFinder</title>
-    <link rel="icon" href="./assets/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="./styles/style.css">
+    <link rel="icon" href="./assets/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="./styles/style.css" />
     <script src="./scripts/main.js" type="module"></script>
-</head>
+  </head>
 
-<body>
+  <body>
     <header>
-        <nav class="navbar">
-            <ul class="navbar__items">
-                <li id="item0">
-                    <a href="#">PathFinder</a>
-                </li>
-                <li id="item1">
-                    <a href="#">Algorithms</a>
-                </li>
-                <li id="item2">
-                    <a href="#">Mazes</a>
-                </li>
-                <li id="item3">
-                    <a href="#">Speed: <span>x1</span></a>
-                </li>
-                <li id="item4">
-                    <a href="#">Clear</a>
-                </li>
-                <li id="item5">
-                    <button>
-                        Visualize
-                    </button>
-                </li>
-            </ul>
+      <nav class="navbar">
+        <ul class="navbar__items">
+          <li id="home">
+            <a href="#">PathFinder</a>
+          </li>
+          <li id="algorithms">
+            <a href="#">Algorithms</a>
+          </li>
+          <li id="mazes">
+            <a href="#">Mazes</a>
+          </li>
+          <li id="speed">
+            <a href="#">Speed: <span>x1</span></a>
+          </li>
+          <li id="clear">
+            <a href="#">Clear</a>
+          </li>
+          <li id="run">
+            <button class="run">Visualize</button>
+          </li>
+        </ul>
 
-            <form class="navbar__cellsTypes">
-                <input type="radio" name="types" id="wall" value="1" checked>
-                <label for="wall">Wall:</label>
+        <form class="navbar__cellsTypes">
+          <input
+            type="radio"
+            name="types"
+            class="cellTypeSelector"
+            id="wall"
+            value="1"
+            checked
+          />
+          <label for="wall" class="cellTypeSelector">Wall:</label>
 
-                <input type="radio" name="types" id="start" value="2">
-                <label for="start">Start:</label>
+          <input
+            type="radio"
+            name="types"
+            class="cellTypeSelector"
+            id="start"
+            value="2"
+          />
+          <label for="start" class="cellTypeSelector">Start:</label>
 
-                <input type="radio" name="types" id="checkpoint" value="4">
-                <label for="checkpoint">Checkpoint:</label>
+          <input
+            type="radio"
+            name="types"
+            class="cellTypeSelector"
+            id="checkpoint"
+            value="4"
+          />
+          <label for="checkpoint" class="cellTypeSelector">Checkpoint:</label>
 
-                <input type="radio" name="types" id="end" value="3">
-                <label for="end">End:</label>
-            </form>
-
-        </nav>
+          <input
+            type="radio"
+            name="types"
+            class="cellTypeSelector"
+            id="end"
+            value="3"
+          />
+          <label for="end" class="cellTypeSelector">End:</label>
+        </form>
+      </nav>
     </header>
     <main>
-        <aside class="sideMenu sideMenu--hidden">
-            <button class="sideMenu__toggle">></button>
-            <h2># Legend</h2>
-            <ul class="sideMenu__legend">
-                <li>
-                    <span class="wall"></span>
-                    <div>
-                        <span>Wall (0...N)</span>
-                        <span>Tips : These are the points that the algorithm will not be able to go through</span>
-                    </div>
-                </li>
-                <li>
-                    <span class="start"></span>
-                    <div>
-                        <span>Start point (1)</span>
-                        <span>Tips : This is the point from which the algorithm will start</span>
-                    </div>
-                </li>
-                <li>
-                    <span class="end"></span>
-                    <div>
-                        <span>End point (0...N)</span>
-                        <span>Tips : This is the point where the algorithm will have to go to finish the path</span>
-                    </div>
-                </li>
-                <li>
-                    <span class="checkpoint"></span>
-                    <div>
-                        <span>Checkpoint (0...N)</span>
-                        <span>Tips : These are the points that the algorithm will have to go through</span>
-                    </div>
-                </li>
-                <li>
-                    <span class="visited"></span>
-                    <div>
-                        <span>Visited (0..N)</span>
-                        <span>Tips : These are the points that the algorithm has already visited</span>
-                    </div>
-                </li>
-                <li>
-                    <span class="path"></span>
-                    <div>
-                        <span>Path (0...N)</span>
-                        <span>Tips : These are the points that the algorithm has taken to reach the end point</span>
-                    </div>
-                </li>
-            </ul>
-        </aside>
-        <div class="wrapper">
-            <table class="board"></table>
-        </div>
+      <aside class="sideMenu sideMenu--hidden">
+        <button class="sideMenu__toggle">></button>
+        <h2># Legend</h2>
+        <ul class="sideMenu__legend">
+          <li>
+            <span class="wall"></span>
+            <div>
+              <span>Wall (0...N)</span>
+              <span
+                >Tips : These are the points that the algorithm will not be able
+                to go through</span
+              >
+            </div>
+          </li>
+          <li>
+            <span class="start"></span>
+            <div>
+              <span>Start point (1)</span>
+              <span
+                >Tips : This is the point from which the algorithm will
+                start</span
+              >
+            </div>
+          </li>
+          <li>
+            <span class="end"></span>
+            <div>
+              <span>End point (0...N)</span>
+              <span
+                >Tips : This is the point where the algorithm will have to go to
+                finish the path</span
+              >
+            </div>
+          </li>
+          <li>
+            <span class="checkpoint"></span>
+            <div>
+              <span>Checkpoint (0...N)</span>
+              <span
+                >Tips : These are the points that the algorithm will have to go
+                through</span
+              >
+            </div>
+          </li>
+          <li>
+            <span class="visited"></span>
+            <div>
+              <span>Visited (0..N)</span>
+              <span
+                >Tips : These are the points that the algorithm has already
+                visited</span
+              >
+            </div>
+          </li>
+          <li>
+            <span class="path"></span>
+            <div>
+              <span>Path (0...N)</span>
+              <span
+                >Tips : These are the points that the algorithm has taken to
+                reach the end point</span
+              >
+            </div>
+          </li>
+        </ul>
+      </aside>
+      <div class="wrapper">
+        <table class="board"></table>
+      </div>
     </main>
     <footer>
-        <span>© Tayeb HAKKAR</span>
-        <span>|</span>
-        <span>Dernière mise à jour le 20/01/2022</span>
+      <span>© Tayeb HAKKAR</span>
+      <span>|</span>
+      <span>Dernière mise à jour le 20/01/2022</span>
     </footer>
-</body>
-
+  </body>
 </html>

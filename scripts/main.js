@@ -1,186 +1,179 @@
 import { AlgorithmFactory } from "./algorithm.js";
 import { Board, CELLS_TYPES } from "./board.js";
+import { CELLS_SIZE, SPEED_LIST } from "./consts.js";
+import { sleep } from "./function.utils.js";
 
-document.addEventListener("DOMContentLoaded",function(){
-    let nav = document.getElementsByTagName("NAV")[0];
-    let sideMenu = document.getElementsByClassName("sideMenu")[0];
-    let width = document.getElementsByClassName('board')[0].clientWidth;
-    let height = document.getElementsByClassName('board')[0].clientHeight;
-    
-    let rows = Math.floor(height / 25);
-    let cols = Math.floor(width / 25);
-    let board = new Board(rows,cols);
-    board.createGride();
-    
-    let mouseDown = false;
-    let mouseButton = -1;
+document.addEventListener("DOMContentLoaded", function () {
+  const sideMenu = document.getElementsByClassName("sideMenu")[0];
+  const WIDTH = document.getElementsByClassName("board")[0].clientWidth;
+  const HEIGHT = document.getElementsByClassName("board")[0].clientHeight;
+  const ROWS = Math.floor(HEIGHT / CELLS_SIZE);
+  const COLUMNS = Math.floor(WIDTH / CELLS_SIZE);
+  const board = new Board(ROWS, COLUMNS);
 
-    let algoIsRunning = false;
-    let cellType = CELLS_TYPES.WALL;
+  let mouseDown = false;
+  let mouseButton = -1;
+  let algoIsRunning = false;
+  let selectedCellType = CELLS_TYPES.WALL;
+  let currentSpeed = 1;
 
-    const SPEEDS = {
-        1: 100,
-        2: 50,
-        4: 25,
-        8: 10,
+  document.addEventListener("mousedown", function (event) {
+    if (algoIsRunning) {
+      return;
+    }
+    mouseDown = true;
+    mouseButton = event.button;
+  });
+
+  document.addEventListener("mouseup", function () {
+    if (algoIsRunning) {
+      return;
+    }
+    mouseDown = false;
+    mouseButton = -1;
+  });
+
+  document.addEventListener("mouseover", function (event) {
+    if (algoIsRunning) {
+      return;
+    }
+    if (mouseDown) {
+      if (event.target.tagName == "TD") {
+        clickOnBoardHandler(event);
+      }
+    }
+  });
+
+  document.addEventListener("contextmenu", function (event) {
+    event.preventDefault();
+    if (event.target.dataset.cell === "") {
+      mouseButton = event.button;
+      clickOnBoardHandler(event);
+    }
+  });
+
+  document.addEventListener("click", function (event) {
+    if (algoIsRunning) {
+      return;
     }
 
-    let currentSpeed = 1;
-
-    document.addEventListener('mousedown',function(e){
-        if(algoIsRunning){
-            return;
-        }
-        mouseDown = true;
-        mouseButton = e.button;
-    });
-
-    document.addEventListener('mouseup',function(e){
-        if(algoIsRunning){
-            return;
-        }
-        mouseDown = false;
-        mouseButton = -1;
-    });
-
-    document.addEventListener('mouseover',function(e){
-        if(algoIsRunning){
-            return;
-        }
-        if(mouseDown){
-            if(e.target.tagName == 'TD'){
-                clickOnBoardHandler(e);
-            }
-        }
-    });
-
-    document.addEventListener('contextmenu', function(e){
-        e.preventDefault();
-        // Board
-        if(e.target.tagName == 'TD'){
-            mouseButton = e.button;
-            clickOnBoardHandler(e);
-        }
-    });
-
-    document.addEventListener('click',function(e){
-        if(algoIsRunning){
-            return;
-        }
-        // Navbar
-        if(e.target.closest('nav')){
-            clickOnNavHandler(e);
-        }
-
-        // Board
-        if(e.target.tagName == 'TD'){
-            mouseButton = e.button;
-            clickOnBoardHandler(e);
-        }
-
-        // Side Menu toggle
-        if(e.target.classList.contains('sideMenu__toggle')){
-            clickOnSideMenuToggleHandler(e);
-        }
-    });
-
-    const clickOnBoardHandler = (e) => {
-        const [x,y] = e.target.id.split(';');
-        if(mouseButton == 0){
-            e.target.classList = [];
-
-            switch(cellType){
-                case CELLS_TYPES.EMPTY:
-                    return;
-                case CELLS_TYPES.WALL:
-                    e.target.classList.add('wall');
-                    break;
-                case CELLS_TYPES.START:
-                    e.target.classList.add('start');
-                    break;
-                case CELLS_TYPES.END:
-                    e.target.classList.add('end');
-                    break;
-                case CELLS_TYPES.CHECKPOINT:
-                    e.target.classList.add('checkpoint');
-                    break;
-                default:
-                    return;
-            }
-
-            board.checkCell(x,y,cellType);
-        }else{
-            e.target.classList.remove('wall');
-            board.uncheckCell(x,y);
-        }
+    if (event.target.closest("nav")) {
+      clickOnNavHandler(event);
     }
 
-    const clickOnNavHandler = async (e) => {
-        if(e.target.tagName == 'INPUT'){
-            cellType = parseInt(e.target.value);
-            return;
-        }
-        if(e.target.tagName == 'BUTTON'){
-            // TODO
-        }
-        if(e.target.tagName == 'A' || e.target.tagName == 'BUTTON' || e.target.tagName == 'SPAN'){
-            let item = e.target.closest('li');
-            if(!item){
-                return;
-            }
-            switch(item.id){
-                case 'item0':
-                    // Nothing to do
-                    break;
-                case 'item1':
-                    // TODO (submenu for algorithm selection)
-                    break;
-                case 'item2':
-                    // TODO (submenu for maze generation)
-                    break;
-                case 'item3':
-                    currentSpeed = currentSpeed * 2;
-                    if(currentSpeed > 8){
-                        currentSpeed = 1;
-                    }
-                    item.getElementsByTagName('span')[0].innerText = `x${currentSpeed}`
-                    break;
-                case 'item4':
-                    board.clear();
-                    break;
-                case 'item5':
-                    // TODO : clean alert
-                    if(board.startPoint.x == undefined || board.endPoints.length == 0){
-                        alert("You must select a start point and at least one end point!");
-                        return;
-                    }
-                    board.clearVisited();
-                    board.clearPath();
-                    algoIsRunning = true;
-                    let path = await AlgorithmFactory.create("Dijkstra", board).run(SPEEDS[currentSpeed]);
-                    algoIsRunning = false;
-                    if(path && path.length > 1){
-                        for(let cell of path){
-                            await new Promise(resolve => setTimeout(resolve, SPEEDS[currentSpeed]));
+    if (event.target.dataset.cell === "") {
+      mouseButton = event.button;
+      clickOnBoardHandler(event);
+    }
 
-                            if(cell != board.startPoint.x+';'+board.startPoint.y && board.endPoints.map(end => end.x+';'+end.y).indexOf(cell) == -1 && document.getElementById(cell).classList.contains('visited')){
-                                document.getElementById(cell).classList = [];
-                                document.getElementById(cell).classList.add('path');
-                            }
-                        }
-                    }
-                    break;
-            }
-        }
+    if (event.target.classList.contains("sideMenu__toggle")) {
+      clickOnSideMenuToggleHandler(event);
     }
-    
-    const clickOnSideMenuToggleHandler = (e) => {
-        if(sideMenu.classList.contains('sideMenu--hidden')){
-            sideMenu.classList.remove('sideMenu--hidden');
-            e.target.classList.add('sideMenu__toggle--rotated');
-        }else{
-            sideMenu.classList.add('sideMenu--hidden');
-            e.target.classList.remove('sideMenu__toggle--rotated');
-        }
+  });
+
+  const clickOnBoardHandler = (event) => {
+    const [x, y] = event.target.id.split(";");
+    board.clearCell(x, y);
+    if (mouseButton === 2) {
+      return;
     }
+    switch (selectedCellType) {
+      case CELLS_TYPES.EMPTY:
+        board.markCellAsEmpty(x, y);
+        return;
+      case CELLS_TYPES.WALL:
+        board.markCellAsWall(x, y);
+        break;
+      case CELLS_TYPES.START:
+        board.markCellAsStart(x, y);
+        break;
+      case CELLS_TYPES.END:
+        board.markCellAsEnd(x, y);
+        break;
+      case CELLS_TYPES.CHECKPOINT:
+        board.markCellAsCheckpoint(x, y);
+        break;
+      default:
+        return;
+    }
+  };
+
+  const clickOnNavHandler = async (event) => {
+    if (event.target.classList.contains("cellTypeSelector")) {
+      selectedCellType = parseInt(event.target.value);
+      return;
+    }
+    if (
+      event.target.tagName == "A" ||
+      event.target.tagName == "BUTTON" ||
+      event.target.tagName == "SPAN"
+    ) {
+      const item = event.target.closest("li");
+      if (!item) {
+        return;
+      }
+      switch (item.id) {
+        case "home":
+          break;
+        case "algorihms":
+          // TODO (submenu for algorithm selection)
+          break;
+        case "mazes":
+          // TODO (submenu for maze generation)
+          break;
+        case "speed":
+          currentSpeed = currentSpeed * 2;
+          if (currentSpeed > 8) {
+            currentSpeed = 1;
+          }
+          item.getElementsByTagName("span")[0].innerText = `x${currentSpeed}`;
+          break;
+        case "clear":
+          board.clear();
+          break;
+        case "run":
+          await runAlgorithm();
+          break;
+      }
+    }
+  };
+
+  const runAlgorithm = async () => {
+    if (!board.startPointIsDefined() || !board.endPointIsDefined()) {
+      alert("You must select a start point and at least one end point!");
+      return;
+    }
+    board.clearVisited();
+    board.clearPath();
+    algoIsRunning = true;
+    const path = await AlgorithmFactory.create("Dijkstra", board).run(
+      SPEED_LIST[currentSpeed]
+    );
+    algoIsRunning = false;
+    if (path?.length === 0) {
+      return;
+    }
+
+    for (const cell of path) {
+      const [x, y] = cell.split(";");
+      if (
+        board.getCellType(x, y) === CELLS_TYPES.VISITED ||
+        board.getCellType(x, y) === CELLS_TYPES.EMPTY
+      ) {
+        board.clearCell(x, y);
+        board.markCellAsPath(x, y);
+      }
+      await sleep(SPEED_LIST[currentSpeed]);
+    }
+  };
+
+  const clickOnSideMenuToggleHandler = (e) => {
+    if (sideMenu.classList.contains("sideMenu--hidden")) {
+      sideMenu.classList.remove("sideMenu--hidden");
+      e.target.classList.add("sideMenu__toggle--rotated");
+    } else {
+      sideMenu.classList.add("sideMenu--hidden");
+      e.target.classList.remove("sideMenu__toggle--rotated");
+    }
+  };
 });
