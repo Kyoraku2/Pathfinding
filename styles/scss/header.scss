@@ -1,0 +1,103 @@
+@mixin highlight-nav-item {
+  &:hover {
+    transition: color ease 0.3s;
+    color: $highlight;
+    background: lighten($color: $secondary, $amount: 3);
+  }
+}
+
+header {
+  grid-area: header;
+  width: 100%;
+  background: $secondary;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  color: $text-light;
+  height: 100%;
+}
+
+nav ul {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+nav ul li {
+  height: 100%;
+}
+
+nav ul li a {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: max-content;
+  padding: 0 1rem;
+  border-radius: 5px;
+  @include highlight-nav-item;
+}
+
+nav ul li button {
+  background: $important;
+  padding: 1rem;
+  cursor: pointer;
+  margin-left: 1rem;
+  color: $text-light;
+  height: 100%;
+  &:hover {
+    background: lighten($color: $important, $amount: 3);
+    transition: background-color ease 0.3s;
+  }
+}
+
+nav form {
+  display: flex;
+}
+
+nav form label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 0 0.25rem;
+  cursor: pointer;
+  border-right: 1px dotted rgb(107, 107, 107);
+  &:first-of-type {
+    border-left: 1px dotted rgb(107, 107, 107);
+  }
+  @include highlight-nav-item;
+  &::after {
+    content: "";
+    width: $cell-width;
+    height: $cell-height;
+    margin-left: 0.5rem;
+    border: 1px solid $text-light;
+    border-radius: 5px;
+  }
+}
+
+nav form .label-wall::after {
+  background: $cell-wall-color;
+}
+
+nav form .label-start::after {
+  background: $cell-start-color;
+}
+
+nav form .label-checkpoint::after {
+  background: $cell-checkpoint-color;
+}
+
+nav form .label-end::after {
+  background: $cell-end-color;
+}
+
+nav form input {
+  display: none;
+}
+
+nav form input:checked + label {
+  color: $highlight;
+}

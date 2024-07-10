@@ -1,72 +1,72 @@
-.wrapper{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: calc(100vh - $footerHeight - $navHeight);
-    width: 100vw;
+.board {
+  grid-area: board;
 }
 
-.board{
-    border: 1px solid black;
-    height: calc(100vh - $footerHeight - $navHeight - $cellHeight);
-    width: 100%;
+.board td {
+  user-select: none;
+  border: 1px solid $cell-border-color;
+  width: $cell-width;
+  height: $cell-height;
+  max-width: $cell-width;
+  max-height: $cell-height;
+  cursor: pointer;
+  background-repeat: no-repeat;
+  transition: ease-in-out background-size 0.25s;
+  background-position: 50% 50%;
+  background-size: 0% 0%;
 
-    td{
-        user-select: none;
-        border: 1px solid $boardBorder;
-        width: $cellWidth;
-        height: $cellHeight;
-        max-width: $cellWidth;
-        max-height: $cellHeight;
-        cursor: pointer;
-        background-repeat: no-repeat;
-        transition: ease-in-out background-size .25s;
-        background-position: 50% 50%;
-        background-size: 0% 0%;
-
-        &:hover{
-            background-image: linear-gradient($boardHover, $boardHover);
-            background-size: 100% 100%;
-        }
-    }
-}
-
-td.wall, .wall{
-    background-image: linear-gradient($cellWallColor, $cellWallColor);
+  &:hover {
+    background-image: linear-gradient($cell-hover-color, $cell-hover-color);
     background-size: 100% 100%;
+  }
 }
 
-td.start, .start{
-    background-image: linear-gradient($cellStartColor, $cellStartColor);
-    background-size: 100% 100%;
+td.wall,
+.wall {
+  background-image: linear-gradient($cell-wall-color, $cell-wall-color);
+  background-size: 100% 100%;
 }
 
-td.end, .end{
-    background-image: linear-gradient($cellEndColor, $cellEndColor);
-    background-size: 100% 100%;
+td.start,
+.start {
+  background-image: linear-gradient($cell-start-color, $cell-start-color);
+  background-size: 100% 100%;
 }
 
-td.checkpoint, .checkpoint{
-    background-image: linear-gradient($cellCheckpointColor, $cellCheckpointColor);
-    background-size: 100% 100%;
-    color: white;
-    font-weight: bold;
-    font-size: .75rem;
-    text-align: center;
-    line-height: $cellHeight;
+td.end,
+.end {
+  background-image: linear-gradient($cell-end-color, $cell-end-color);
+  background-size: 100% 100%;
 }
 
-td.path, .path{
-    background-image: linear-gradient($cellPathColor, $cellPathColor);
-    background-size: 100% 100%;
+td.checkpoint,
+.checkpoint {
+  background-image: linear-gradient(
+    $cell-checkpoint-color,
+    $cell-checkpoint-color
+  );
+  background-size: 100% 100%;
+  color: white;
+  font-weight: bold;
+  font-size: 0.75rem;
+  text-align: center;
+  line-height: $cell-height;
 }
 
-td.visited, .visited{
-    background-image: linear-gradient($cellVisitedColor, $cellVisitedColor);
-    background-size: 100% 100%;
+td.path,
+.path {
+  background-image: linear-gradient($cell-path-color, $cell-path-color);
+  background-size: 100% 100%;
 }
 
-td.visiting, .visiting{
-    background-image: linear-gradient($cellVisitingColor, $cellVisitingColor);
-    background-size: 100% 100%;
+td.visited,
+.visited {
+  background-image: linear-gradient($cell-visited-color, $cell-visited-color);
+  background-size: 100% 100%;
+}
+
+td.visiting,
+.visiting {
+  background-image: linear-gradient($cell-visiting-color, $cell-visiting-color);
+  background-size: 100% 100%;
 }

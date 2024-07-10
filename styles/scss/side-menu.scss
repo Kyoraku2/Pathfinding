@@ -1,0 +1,116 @@
+aside {
+  z-index: 1;
+  position: fixed;
+  top: $navbar-height;
+  left: 0;
+  width: $side-menu-width;
+  background: $primary;
+  height: calc(100vh - $footer-height - $navbar-height);
+  border-right: 1px solid rgb(212, 212, 212);
+  box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.25);
+  transition: all ease 0.3s;
+  color: $text-dark;
+}
+
+aside .toggle {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: -1rem;
+  background: $primary;
+  padding: 1rem 0.25rem;
+  border-radius: 0 5px 5px 0;
+
+  &--rotated {
+    transform: rotate(180deg);
+    border-radius: 5px 0 0 5px;
+  }
+  &:hover {
+    background-color: $cell-hover-color;
+    color: $text-light;
+    cursor: pointer;
+  }
+}
+
+aside h2 {
+  border-bottom: 1px solid rgb(212, 212, 212);
+}
+
+.hidden {
+  width: 0;
+  border-right: none;
+  & *:not(button) {
+    display: none;
+  }
+}
+
+.legend {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  gap: 1rem;
+}
+
+.legend li {
+  display: flex;
+  gap: 1rem;
+}
+
+.legend li > span:first-of-type {
+  min-width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid rgb(212, 212, 212);
+  border-radius: 5px;
+}
+
+.legend li div {
+  display: flex;
+  flex-direction: column;
+  padding: 0.25rem 0;
+}
+
+.legend li div span:first-of-type {
+  font-weight: bold;
+}
+
+.legend li div span:last-of-type {
+  font-size: 0.8rem;
+  font-weight: normal;
+  color: $text-subtitle;
+  margin-top: 0.5rem;
+}
+
+/*
+
+  
+
+  &__legend {
+    li {
+      display: flex;
+      gap: 1rem;
+      font-size: 1.25rem;
+      font-weight: bold;
+
+
+      div {
+        display: flex;
+        flex-direction: column;
+        span:last-of-type {
+          font-size: 0.75rem;
+          font-weight: normal;
+          color: rgb(158, 158, 158);
+          margin-top: 0.5rem;
+        }
+      }
+    }
+  }
+}
+
+.sideMenu--hidden {
+  width: 0;
+  border-right: none;
+  & *:not(button) {
+    display: none;
+  }
+}
+*/

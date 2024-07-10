@@ -1,9 +1,37 @@
-@import './reset.scss';
-@import './fonts.scss';
-@import './vars.scss';
+$cell-border-color: #c8b6fd;
+$cell-hover-color: #c8b6fd;
+$cell-height: 25px;
+$cell-width: 25px;
+$cell-start-color: rgb(47, 211, 14);
+$cell-end-color: rgb(255, 0, 0);
+$cell-checkpoint-color: rgb(0, 140, 255);
+$cell-wall-color: rgba(107, 0, 194, 0.5);
+$cell-path-color: rgba(0, 255, 0, 0.5);
+$cell-visited-color: rgba(251, 255, 0, 0.5);
+$cell-visiting-color: orange;
 
-@import './navbar.scss';
-@import './board.scss';
-@import './footer.scss';
-@import './sideMenu.scss';
-@import './body.scss';
+$important: #6f47e5;
+$primary: #fff;
+$secondary: #3c3c3c;
+$ternary: #282c34;
+$text-dark: #222222;
+$text-light: #ffffff;
+$text-subtitle: #6c757d;
+$success: #32b643;
+$danger: #e84600;
+$warning: #ffb700;
+
+$navbar-height: 60px;
+$footer-height: 30px;
+$highlight: #6f47e5;
+$navColor: white;
+$side-menu-width: 20rem;
+$sideMenuBack: #fff;
+
+@import "./reset.scss";
+@import "./fonts.scss";
+@import "./header.scss";
+@import "./board.scss";
+@import "./footer.scss";
+@import "./side-menu.scss";
+@import "./body.scss";

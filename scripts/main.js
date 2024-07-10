@@ -4,11 +4,11 @@ import { CELLS_SIZE, SPEED_LIST } from "./consts.js";
 import { sleep } from "./function.utils.js";
 
 document.addEventListener("DOMContentLoaded", function () {
-  const sideMenu = document.getElementsByClassName("sideMenu")[0];
+  const sideMenu = document.getElementsByTagName("aside")[0];
   const WIDTH = document.getElementsByClassName("board")[0].clientWidth;
   const HEIGHT = document.getElementsByClassName("board")[0].clientHeight;
-  const ROWS = Math.floor(HEIGHT / CELLS_SIZE);
-  const COLUMNS = Math.floor(WIDTH / CELLS_SIZE);
+  const ROWS = Math.floor(HEIGHT / CELLS_SIZE) - 1;
+  const COLUMNS = Math.floor(WIDTH / CELLS_SIZE) - 1;
   const board = new Board(ROWS, COLUMNS);
 
   let mouseDown = false;
@@ -53,6 +53,10 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   document.addEventListener("click", function (event) {
+    if (event.target.classList.contains("toggle")) {
+      clickOnSideMenuToggleHandler(event);
+    }
+
     if (algoIsRunning) {
       return;
     }
@@ -64,10 +68,6 @@ document.addEventListener("DOMContentLoaded", function () {
     if (event.target.dataset.cell === "") {
       mouseButton = event.button;
       clickOnBoardHandler(event);
-    }
-
-    if (event.target.classList.contains("sideMenu__toggle")) {
-      clickOnSideMenuToggleHandler(event);
     }
   });
 
@@ -99,7 +99,12 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   const clickOnNavHandler = async (event) => {
-    if (event.target.classList.contains("cellTypeSelector")) {
+    if (
+      event.target.classList.contains("label-wall") ||
+      event.target.classList.contains("label-start") ||
+      event.target.classList.contains("label-end") ||
+      event.target.classList.contains("label-checkpoint")
+    ) {
       selectedCellType = parseInt(event.target.value);
       return;
     }
@@ -116,10 +121,8 @@ document.addEventListener("DOMContentLoaded", function () {
         case "home":
           break;
         case "algorihms":
-          // TODO (submenu for algorithm selection)
           break;
         case "mazes":
-          // TODO (submenu for maze generation)
           break;
         case "speed":
           currentSpeed = currentSpeed * 2;
@@ -168,12 +171,12 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   const clickOnSideMenuToggleHandler = (e) => {
-    if (sideMenu.classList.contains("sideMenu--hidden")) {
-      sideMenu.classList.remove("sideMenu--hidden");
-      e.target.classList.add("sideMenu__toggle--rotated");
+    if (sideMenu.classList.contains("hidden")) {
+      sideMenu.classList.remove("hidden");
+      e.target.classList.add("toggle--rotated");
     } else {
-      sideMenu.classList.add("sideMenu--hidden");
-      e.target.classList.remove("sideMenu__toggle--rotated");
+      sideMenu.classList.add("hidden");
+      e.target.classList.remove("toggle--rotated");
     }
   };
 });

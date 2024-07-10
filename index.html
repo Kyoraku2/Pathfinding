@@ -17,8 +17,8 @@
 
   <body>
     <header>
-      <nav class="navbar">
-        <ul class="navbar__items">
+      <nav>
+        <ul>
           <li id="home">
             <a href="#">PathFinder</a>
           </li>
@@ -39,121 +39,117 @@
           </li>
         </ul>
 
-        <form class="navbar__cellsTypes">
+        <form>
           <input
             type="radio"
             name="types"
-            class="cellTypeSelector"
             id="wall"
+            class="label-wall"
             value="1"
             checked
           />
-          <label for="wall" class="cellTypeSelector">Wall:</label>
+          <label for="wall" class="label-wall">Wall:</label>
 
           <input
             type="radio"
             name="types"
-            class="cellTypeSelector"
             id="start"
+            class="label-start"
             value="2"
           />
-          <label for="start" class="cellTypeSelector">Start:</label>
+          <label for="start" class="label-start">Start:</label>
 
           <input
             type="radio"
             name="types"
-            class="cellTypeSelector"
             id="checkpoint"
+            class="label-checkpoint"
             value="4"
           />
-          <label for="checkpoint" class="cellTypeSelector">Checkpoint:</label>
+          <label for="checkpoint" class="label-checkpoint">Checkpoint:</label>
 
           <input
             type="radio"
             name="types"
-            class="cellTypeSelector"
             id="end"
+            class="label-end"
             value="3"
           />
-          <label for="end" class="cellTypeSelector">End:</label>
+          <label for="end" class="label-end">End:</label>
         </form>
       </nav>
     </header>
-    <main>
-      <aside class="sideMenu sideMenu--hidden">
-        <button class="sideMenu__toggle">></button>
-        <h2># Legend</h2>
-        <ul class="sideMenu__legend">
-          <li>
-            <span class="wall"></span>
-            <div>
-              <span>Wall (0...N)</span>
-              <span
-                >Tips : These are the points that the algorithm will not be able
-                to go through</span
-              >
-            </div>
-          </li>
-          <li>
-            <span class="start"></span>
-            <div>
-              <span>Start point (1)</span>
-              <span
-                >Tips : This is the point from which the algorithm will
-                start</span
-              >
-            </div>
-          </li>
-          <li>
-            <span class="end"></span>
-            <div>
-              <span>End point (0...N)</span>
-              <span
-                >Tips : This is the point where the algorithm will have to go to
-                finish the path</span
-              >
-            </div>
-          </li>
-          <li>
-            <span class="checkpoint"></span>
-            <div>
-              <span>Checkpoint (0...N)</span>
-              <span
-                >Tips : These are the points that the algorithm will have to go
-                through</span
-              >
-            </div>
-          </li>
-          <li>
-            <span class="visited"></span>
-            <div>
-              <span>Visited (0..N)</span>
-              <span
-                >Tips : These are the points that the algorithm has already
-                visited</span
-              >
-            </div>
-          </li>
-          <li>
-            <span class="path"></span>
-            <div>
-              <span>Path (0...N)</span>
-              <span
-                >Tips : These are the points that the algorithm has taken to
-                reach the end point</span
-              >
-            </div>
-          </li>
-        </ul>
-      </aside>
-      <div class="wrapper">
-        <table class="board"></table>
-      </div>
-    </main>
+    <table class="board"></table>
     <footer>
       <span>© Tayeb HAKKAR</span>
       <span>|</span>
       <span>Dernière mise à jour le 20/01/2022</span>
     </footer>
+    <aside class="hidden">
+      <button class="toggle">></button>
+      <h2># Legend</h2>
+      <ul class="legend">
+        <li>
+          <span class="wall"></span>
+          <div>
+            <span>Wall (0...N)</span>
+            <span
+              >Tips : These are the points that the algorithm will not be able
+              to go through</span
+            >
+          </div>
+        </li>
+        <li>
+          <span class="start"></span>
+          <div>
+            <span>Start point (1)</span>
+            <span
+              >Tips : This is the point from which the algorithm will
+              start</span
+            >
+          </div>
+        </li>
+        <li>
+          <span class="end"></span>
+          <div>
+            <span>End point (0...N)</span>
+            <span
+              >Tips : This is the point where the algorithm will have to go to
+              finish the path</span
+            >
+          </div>
+        </li>
+        <li>
+          <span class="checkpoint"></span>
+          <div>
+            <span>Checkpoint (0...N)</span>
+            <span
+              >Tips : These are the points that the algorithm will have to go
+              through</span
+            >
+          </div>
+        </li>
+        <li>
+          <span class="visited"></span>
+          <div>
+            <span>Visited (0..N)</span>
+            <span
+              >Tips : These are the points that the algorithm has already
+              visited</span
+            >
+          </div>
+        </li>
+        <li>
+          <span class="path"></span>
+          <div>
+            <span>Path (0...N)</span>
+            <span
+              >Tips : These are the points that the algorithm has taken to reach
+              the end point</span
+            >
+          </div>
+        </li>
+      </ul>
+    </aside>
   </body>
 </html>
