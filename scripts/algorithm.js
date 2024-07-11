@@ -27,8 +27,72 @@ class BFS extends Algorithm {
     super("BFS", board);
   }
 
-  run() {
-    throw new Error("Method not implemented.");
+  async run(speed) {
+    if (this.checkpoints.length > 0) {
+      return this.runWithCheckpoints(speed);
+    } else {
+      return this.runUtils(this.start, this.endPointList, speed);
+    }
+  }
+
+  async runWithCheckpoints(speed) {
+    let path = [];
+    for (let i = 0; i < this.checkpoints.length; i++) {
+      let start = i == 0 ? this.start : this.checkpoints[i - 1];
+      let end = this.checkpoints[i];
+      let subPath = await this.runUtils(start, [end], speed);
+      if (subPath.length > 0) {
+        path = path.concat(subPath);
+      } else {
+        return [];
+      }
+    }
+    let lastCheckpoint = this.checkpoints[this.checkpoints.length - 1];
+    let subPath = await this.runUtils(lastCheckpoint, this.endPointList, speed);
+    if (subPath.length > 0) {
+      path = path.concat(subPath);
+    } else {
+      return [];
+    }
+    return path;
+  }
+
+  async runUtils(start, endPointList, speed) {
+    const queue = [];
+    const visited = {};
+
+    visited[start] = true;
+    queue.push(start);
+
+    while (queue.length) {
+      const current = queue.shift();
+
+      if (endPointList.includes(current)) {
+        let path = [current];
+        let node = current;
+        while (node !== start) {
+          node = visited[node];
+          path.push(node);
+        }
+        return path.reverse();
+      }
+
+      for (const neighbor of this.adjacencyList[current]) {
+        if (!visited[neighbor]) {
+          visited[neighbor] = current;
+          queue.push(neighbor);
+          const [x, y] = neighbor.split(";").map((n) => parseInt(n));
+          if (
+            this.board.getCellType(x, y) === CELLS_TYPES.EMPTY ||
+            this.board.getCellType(x, y) === CELLS_TYPES.VISITED
+          ) {
+            await sleep(speed);
+            this.board.markCellAsVisited(x, y);
+          }
+        }
+      }
+    }
+    return [];
   }
 }
 
