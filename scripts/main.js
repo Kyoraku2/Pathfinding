@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let algoIsRunning = false;
   let selectedCellType = CELLS_TYPES.WALL;
   let currentSpeed = 1;
-  let selectedAlgorithm = "BFS";
+  let selectedAlgorithm = "DFS";
 
   document.addEventListener("mousedown", function (event) {
     if (algoIsRunning) {
