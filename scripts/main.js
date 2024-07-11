@@ -162,12 +162,19 @@ document.addEventListener("DOMContentLoaded", function () {
     for (const cell of path) {
       const [x, y] = cell.split(";");
       if (
+        board.getCellType(x, y) !== CELLS_TYPES.VISITED &&
+        board.getCellType(x, y) !== CELLS_TYPES.EMPTY &&
+        board.getCellType(x, y) !== CELLS_TYPES.PATH
+      ) {
+        continue;
+      }
+      if (
         board.getCellType(x, y) === CELLS_TYPES.VISITED ||
         board.getCellType(x, y) === CELLS_TYPES.EMPTY
       ) {
         board.clearCell(x, y);
-        board.markCellAsPath(x, y);
       }
+      board.markCellAsPath(x, y);
       await sleep(SPEED_LIST[currentSpeed]);
     }
   };

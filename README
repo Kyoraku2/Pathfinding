@@ -3,4 +3,3 @@ Tasks to do :
 - Add export/import function
 - Implements all algorithms (maze & pathfinding)
 - Implements designed alert instead of alert
-- When path is drawing, manage opacity too to show cells with multiple pass

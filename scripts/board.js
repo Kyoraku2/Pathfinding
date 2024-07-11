@@ -37,19 +37,19 @@ export class Board {
    */
   createGride() {
     const table = document.createElement("table");
-    for (var r = 0; r < this.rows; ++r) {
-      const row = document.createElement("tr");
-      row.id = "row-" + r;
-      this.graph[r] = [];
-      for (var c = 0; c < this.columns; ++c) {
+    for (let row = 0; row < this.rows; ++row) {
+      const rowElement = document.createElement("tr");
+      rowElement.id = "row-" + row;
+      this.graph[row] = [];
+      for (let column = 0; column < this.columns; ++column) {
         const cell = document.createElement("td");
-        cell.id = r + ";" + c;
+        cell.id = row + ";" + column;
         cell.dataset.cell = "";
         cell.style.opacity = "1";
-        this.graph[r][c] = CELLS_TYPES.EMPTY;
-        row.appendChild(cell);
+        this.graph[row][column] = CELLS_TYPES.EMPTY;
+        rowElement.appendChild(cell);
       }
-      table.appendChild(row);
+      table.appendChild(rowElement);
     }
     this.webElement = table;
     document.getElementsByClassName("board")[0].appendChild(table);
@@ -178,13 +178,15 @@ export class Board {
   }
 
   markCellAsPath(x, y) {
-    if (this.graph[x][y] == CELLS_TYPES.PATH) {
-      return;
-    }
     this.graph[x][y] = CELLS_TYPES.PATH;
     const cell = document.getElementById(x + ";" + y);
     if (!cell.classList.contains("path")) {
       cell.classList.add("path");
+      cell.style.opacity = "0.4";
+    } else {
+      let opacity = parseFloat(cell.style.opacity);
+      opacity += 0.2;
+      cell.style.opacity = opacity;
     }
   }
 
