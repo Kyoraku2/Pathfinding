@@ -208,7 +208,7 @@ export class Board {
       this.checkpointList = this.checkpointList.filter(
         (checkpoint) => checkpoint.x != x && checkpoint.y != y
       );
-      this.checkpointList.map((checkpoint, index) => {
+      this.checkpointList.forEach((checkpoint, index) => {
         document.getElementById(checkpoint.x + ";" + checkpoint.y).textContent =
           index + 1;
       });
@@ -269,10 +269,11 @@ export class Board {
    */
   toAdjacencyMatrix() {
     let adjacencyMatrix = [];
-    for (var r = 0; r < this.rows; ++r) {
-      adjacencyMatrix[r] = [];
-      for (var c = 0; c < this.columns; ++c) {
-        adjacencyMatrix[r][c] = this.graph[r][c] == CELLS_TYPES.WALL ? 0 : 1;
+    for (let row = 0; row < this.rows; ++row) {
+      adjacencyMatrix[row] = [];
+      for (let column = 0; column < this.columns; ++column) {
+        adjacencyMatrix[row][column] =
+          this.graph[row][column] == CELLS_TYPES.WALL ? 0 : 1;
       }
     }
     return adjacencyMatrix;
@@ -280,29 +281,34 @@ export class Board {
 
   /**
    * @description Convert the graph to an adjacency list
-   * @returns {void}
    */
   toAdjacencyList() {
     let adjacencyList = {};
-    for (var r = 0; r < this.rows; ++r) {
-      for (var c = 0; c < this.columns; ++c) {
-        if (this.graph[r][c] == CELLS_TYPES.WALL) {
+    for (let row = 0; row < this.rows; ++row) {
+      for (let column = 0; column < this.columns; ++column) {
+        if (this.graph[row][column] == CELLS_TYPES.WALL) {
           continue;
         }
 
-        let key = r + ";" + c;
+        let key = row + ";" + column;
         adjacencyList[key] = [];
-        if (r > 0 && this.graph[r - 1][c] != CELLS_TYPES.WALL) {
-          adjacencyList[key].push(r - 1 + ";" + c);
+        if (row > 0 && this.graph[row - 1][column] != CELLS_TYPES.WALL) {
+          adjacencyList[key].push(row - 1 + ";" + column);
         }
-        if (c > 0 && this.graph[r][c - 1] != CELLS_TYPES.WALL) {
-          adjacencyList[key].push(r + ";" + (c - 1));
+        if (column > 0 && this.graph[row][column - 1] != CELLS_TYPES.WALL) {
+          adjacencyList[key].push(row + ";" + (column - 1));
         }
-        if (r < this.rows - 1 && this.graph[r + 1][c] != CELLS_TYPES.WALL) {
-          adjacencyList[key].push(r + 1 + ";" + c);
+        if (
+          row < this.rows - 1 &&
+          this.graph[row + 1][column] != CELLS_TYPES.WALL
+        ) {
+          adjacencyList[key].push(row + 1 + ";" + column);
         }
-        if (c < this.columns - 1 && this.graph[r][c + 1] != CELLS_TYPES.WALL) {
-          adjacencyList[key].push(r + ";" + (c + 1));
+        if (
+          column < this.columns - 1 &&
+          this.graph[row][column + 1] != CELLS_TYPES.WALL
+        ) {
+          adjacencyList[key].push(row + ";" + (column + 1));
         }
       }
     }
@@ -342,5 +348,20 @@ export class Board {
    */
   checkpointIsDefined() {
     return this.checkpointList.length > 0;
+  }
+
+  /**
+   * @description Get all the edges of the graph
+   * Should return {from:string, to:string}[]
+   */
+  getEdgeList() {
+    const edgeList = [];
+    const adjacencyList = this.toAdjacencyList();
+    Object.keys(adjacencyList).forEach((key) => {
+      adjacencyList[key].forEach((neighbor) => {
+        edgeList.push({ from: key, to: neighbor });
+      });
+    });
+    return edgeList;
   }
 }

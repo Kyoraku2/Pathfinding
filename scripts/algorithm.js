@@ -16,7 +16,9 @@ class Algorithm {
   }
 
   run() {
-    throw new Error("Method not implemented.");
+    throw new Error(
+      "Method not implemented. Shouldn't use instance of Agorithm. Use specific instance instead"
+    );
   }
 }
 
@@ -143,8 +145,94 @@ class BellmanFord extends Algorithm {
     super("Bellman-Ford", board);
   }
 
-  run() {
-    throw new Error("Method not implemented.");
+  async run(speed) {
+    if (this.checkpoints.length > 0) {
+      return this.runWithCheckpoints(speed);
+    } else {
+      return this.runUtils(this.start, this.endPointList, speed);
+    }
+  }
+
+  async runWithCheckpoints() {
+    let path = [];
+    for (let i = 0; i < this.checkpoints.length; i++) {
+      let start = i == 0 ? this.start : this.checkpoints[i - 1];
+      let end = this.checkpoints[i];
+      let subPath = await this.runUtils(start, [end], speed);
+      if (subPath.length > 0) {
+        path = path.concat(subPath);
+      } else {
+        return [];
+      }
+    }
+    let lastCheckpoint = this.checkpoints[this.checkpoints.length - 1];
+    let subPath = await this.runUtils(lastCheckpoint, this.endPointList, speed);
+    if (subPath.length > 0) {
+      path = path.concat(subPath);
+    } else {
+      return [];
+    }
+    return path;
+  }
+
+  async runUtils(start, endPointList) {
+    const vectrices = Object.keys(this.adjacencyList);
+    const edgeList = this.board.getEdgeList();
+    const distances = {};
+    const previous = {};
+    distances[start] = 0;
+
+    for (let vertex of vectrices) {
+      if (vertex !== start) {
+        distances[vertex] = Infinity;
+      }
+    }
+
+    let endPoint;
+    for (let i = 0; i < vectrices.length - 1; ++i) {
+      for (const edge of edgeList) {
+        if (distances[edge.from] + 1 < distances[edge.to]) {
+          distances[edge.to] = distances[edge.from] + 1;
+          previous[edge.to] = edge.from;
+          const [x, y] = edge.to.split(";").map((n) => parseInt(n));
+          if (
+            this.board.getCellType(x, y) === CELLS_TYPES.EMPTY ||
+            this.board.getCellType(x, y) === CELLS_TYPES.VISITED
+          ) {
+            await sleep(speed);
+            this.board.markCellAsVisited(x, y);
+          }
+          if (endPointList.includes(edge.to)) {
+            i = vectrices.length;
+            endPoint = edge.to;
+            break;
+          }
+        }
+      }
+    }
+
+    if (!endPoint) {
+      return [];
+    }
+
+    for (const edge of edgeList) {
+      if (
+        distances[edge.from] !== Infinity &&
+        distances[edge.to] !== Infinity &&
+        distances[edge.from] + 1 < distances[edge.to]
+      ) {
+        return [];
+      }
+    }
+
+    const buildPath = (current) => {
+      if (current === start) {
+        return [start];
+      }
+      return [...buildPath(previous[current]), current];
+    };
+
+    return buildPath(endPoint);
   }
 }
 

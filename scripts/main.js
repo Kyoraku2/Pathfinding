@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let algoIsRunning = false;
   let selectedCellType = CELLS_TYPES.WALL;
   let currentSpeed = 1;
-  let selectedAlgorithm = "Dijkstra";
+  let selectedAlgorithm = "Bellman-Ford";
 
   document.addEventListener("mousedown", function (event) {
     if (algoIsRunning) {
