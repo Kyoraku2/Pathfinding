@@ -2,6 +2,4 @@ Tasks to do :
 
 - Add export/import function
 - Implements all algorithms (maze & pathfinding)
-- Implements designed modal instead of alert
-- Import icon lib (for the chevron, end flag...)
-- Implements submenu for mazes & pathfinding alrogithms
+- Implements designed alert instead of alert

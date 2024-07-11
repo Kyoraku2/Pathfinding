@@ -29,6 +29,10 @@ nav > ul li {
   height: 100%;
 }
 
+nav > ul li a i {
+  margin-left: 8px;
+}
+
 nav > ul li a {
   display: flex;
   align-items: center;
@@ -123,4 +127,9 @@ nav .submenu:hover ul li {
     border-bottom: none;
   }
   @include highlight-nav-item;
+}
+
+nav .submenu:hover i {
+  transform: rotate(180deg);
+  transition: transform ease 0.3s;
 }
