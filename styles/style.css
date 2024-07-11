@@ -96,31 +96,30 @@ nav {
   height: 100%;
 }
 
-nav ul {
+nav > ul {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
 
-nav ul li {
+nav > ul li {
   height: 100%;
 }
 
-nav ul li a {
+nav > ul li a {
   display: flex;
   align-items: center;
   height: 100%;
   width: max-content;
   padding: 0 1rem;
-  border-radius: 5px;
 }
-nav ul li a:hover {
+nav > ul li a:hover {
   transition: color ease 0.3s;
   color: #6f47e5;
   background: #444444;
 }
 
-nav ul li button {
+nav > ul li button {
   background: #6f47e5;
   padding: 1rem;
   cursor: pointer;
@@ -128,7 +127,7 @@ nav ul li button {
   color: #ffffff;
   height: 100%;
 }
-nav ul li button:hover {
+nav > ul li button:hover {
   background: #7954e7;
   transition: background-color ease 0.3s;
 }
@@ -160,7 +159,6 @@ nav form label::after {
   height: 25px;
   margin-left: 0.5rem;
   border: 1px solid #ffffff;
-  border-radius: 5px;
 }
 
 nav form .label-wall::after {
@@ -185,6 +183,35 @@ nav form input {
 
 nav form input:checked + label {
   color: #6f47e5;
+}
+
+.submenu {
+  position: relative;
+}
+
+.submenu ul {
+  display: none;
+}
+
+nav .submenu:hover ul {
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  background-color: #3c3c3c;
+}
+
+nav .submenu:hover ul li {
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #444444;
+  cursor: pointer;
+}
+nav .submenu:hover ul li:last-of-type {
+  border-bottom: none;
+}
+nav .submenu:hover ul li:hover {
+  transition: color ease 0.3s;
+  color: #6f47e5;
+  background: #444444;
 }
 
 .board {

@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let algoIsRunning = false;
   let selectedCellType = CELLS_TYPES.WALL;
   let currentSpeed = 1;
+  let selectedAlgorithm = "Dijkstra";
 
   document.addEventListener("mousedown", function (event) {
     if (algoIsRunning) {
@@ -58,6 +59,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (algoIsRunning) {
+      return;
+    }
+
+    if (event.target.dataset.algorithm) {
+      selectedAlgorithm = event.target.dataset.algorithm;
       return;
     }
 
@@ -118,12 +124,6 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
       switch (item.id) {
-        case "home":
-          break;
-        case "algorihms":
-          break;
-        case "mazes":
-          break;
         case "speed":
           currentSpeed = currentSpeed * 2;
           if (currentSpeed > 8) {
@@ -137,6 +137,8 @@ document.addEventListener("DOMContentLoaded", function () {
         case "run":
           await runAlgorithm();
           break;
+        default:
+          return;
       }
     }
   };
@@ -149,7 +151,7 @@ document.addEventListener("DOMContentLoaded", function () {
     board.clearVisited();
     board.clearPath();
     algoIsRunning = true;
-    const path = await AlgorithmFactory.create("Dijkstra", board).run(
+    const path = await AlgorithmFactory.create(selectedAlgorithm, board).run(
       SPEED_LIST[currentSpeed]
     );
     algoIsRunning = false;
