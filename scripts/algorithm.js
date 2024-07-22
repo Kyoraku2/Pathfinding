@@ -41,7 +41,7 @@ class BFS extends Algorithm {
       let start = i == 0 ? this.start : this.checkpoints[i - 1];
       let end = this.checkpoints[i];
       let subPath = await this.runUtils(start, [end], speed);
-      if (subPath.length > 0) {
+      if (subPath?.length > 0) {
         path = path.concat(subPath);
       } else {
         return [];
@@ -49,7 +49,7 @@ class BFS extends Algorithm {
     }
     let lastCheckpoint = this.checkpoints[this.checkpoints.length - 1];
     let subPath = await this.runUtils(lastCheckpoint, this.endPointList, speed);
-    if (subPath.length > 0) {
+    if (subPath?.length > 0) {
       path = path.concat(subPath);
     } else {
       return [];
@@ -115,7 +115,7 @@ class DFS extends Algorithm {
       let start = i == 0 ? this.start : this.checkpoints[i - 1];
       let end = this.checkpoints[i];
       let subPath = await this.runUtils(start, [end], speed);
-      if (subPath.length > 0) {
+      if (subPath?.length > 0) {
         path = path.concat(subPath);
       } else {
         return [];
@@ -123,7 +123,7 @@ class DFS extends Algorithm {
     }
     let lastCheckpoint = this.checkpoints[this.checkpoints.length - 1];
     let subPath = await this.runUtils(lastCheckpoint, this.endPointList, speed);
-    if (subPath.length > 0) {
+    if (subPath?.length > 0) {
       path = path.concat(subPath);
     } else {
       return [];
@@ -179,7 +179,7 @@ class Dijkstra extends Algorithm {
       let start = i == 0 ? this.start : this.checkpoints[i - 1];
       let end = this.checkpoints[i];
       let subPath = await this.runUtils(start, [end], speed);
-      if (subPath.length > 0) {
+      if (subPath?.length > 0) {
         path = path.concat(subPath);
       } else {
         return [];
@@ -187,7 +187,7 @@ class Dijkstra extends Algorithm {
     }
     let lastCheckpoint = this.checkpoints[this.checkpoints.length - 1];
     let subPath = await this.runUtils(lastCheckpoint, this.endPointList, speed);
-    if (subPath.length > 0) {
+    if (subPath?.length > 0) {
       path = path.concat(subPath);
     } else {
       return [];
@@ -277,7 +277,7 @@ class BellmanFord extends Algorithm {
       let start = i == 0 ? this.start : this.checkpoints[i - 1];
       let end = this.checkpoints[i];
       let subPath = await this.runUtils(start, [end], speed);
-      if (subPath.length > 0) {
+      if (subPath?.length > 0) {
         path = path.concat(subPath);
       } else {
         return [];
@@ -285,7 +285,7 @@ class BellmanFord extends Algorithm {
     }
     let lastCheckpoint = this.checkpoints[this.checkpoints.length - 1];
     let subPath = await this.runUtils(lastCheckpoint, this.endPointList, speed);
-    if (subPath.length > 0) {
+    if (subPath?.length > 0) {
       path = path.concat(subPath);
     } else {
       return [];
