@@ -2,4 +2,4 @@ Tasks to do :
 
 - Add export/import function
 - Implements all algorithms (maze & pathfinding)
-- Implements designed alert instead of alert
+- Implements designed alert instead of alert (started, ended, error...)

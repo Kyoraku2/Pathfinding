@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let algoIsRunning = false;
   let selectedCellType = CELLS_TYPES.WALL;
   let currentSpeed = 1;
-  let selectedAlgorithm = "DFS";
+  let selectedAlgorithm = "Bellman-Ford";
 
   document.addEventListener("mousedown", function (event) {
     if (algoIsRunning) {
@@ -64,6 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (event.target.dataset.algorithm) {
       selectedAlgorithm = event.target.dataset.algorithm;
+      alert(`Selected algorithm: ${selectedAlgorithm}`);
       return;
     }
 
