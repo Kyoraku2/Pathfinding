@@ -106,6 +106,7 @@ nav form input:checked + label {
 
 .submenu {
   position: relative;
+  z-index: 1;
 }
 
 .submenu ul {
