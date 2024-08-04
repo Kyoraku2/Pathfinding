@@ -2,6 +2,7 @@ import { AlgorithmFactory } from "./algorithm.js";
 import { Board, CELLS_TYPES } from "./board.js";
 import { CELLS_SIZE, SPEED_LIST } from "./consts.js";
 import { sleep } from "./function.utils.js";
+import { ALERT_TYPES, createAlert } from "./alert.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   const sideMenu = document.getElementsByTagName("aside")[0];
@@ -64,7 +65,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (event.target.dataset.algorithm) {
       selectedAlgorithm = event.target.dataset.algorithm;
-      alert(`Selected algorithm: ${selectedAlgorithm}`);
+      createAlert(
+        ALERT_TYPES.INFO,
+        "Changed algorithm:",
+        "You have selected " + selectedAlgorithm + " algorithm."
+      );
       return;
     }
 
@@ -146,19 +151,39 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const runAlgorithm = async () => {
     if (!board.startPointIsDefined() || !board.endPointIsDefined()) {
-      alert("You must select a start point and at least one end point!");
+      createAlert(
+        ALERT_TYPES.ERROR,
+        "Missing start or end point:",
+        "Please define start and end points."
+      );
       return;
     }
     board.clearVisited();
     board.clearPath();
     algoIsRunning = true;
+    createAlert(
+      ALERT_TYPES.INFO,
+      "Algorithm is running:",
+      `${selectedAlgorithm} algorithm is running, wait for the result.`
+    );
     const path = await AlgorithmFactory.create(selectedAlgorithm, board).run(
       SPEED_LIST[currentSpeed]
     );
     algoIsRunning = false;
-    if (path?.length === 0) {
+    if (!path || path.length === 0) {
+      createAlert(
+        ALERT_TYPES.WARNING,
+        "No path found:",
+        "There is no path between start and end points (passing through all checkpoints)."
+      );
       return;
     }
+
+    createAlert(
+      ALERT_TYPES.SUCCESS,
+      "Path found:",
+      `A path of length ${path.length} between start and end points has been found.`
+    );
 
     for (const cell of path) {
       const [x, y] = cell.split(";");

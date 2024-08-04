@@ -79,38 +79,3 @@ aside h2 {
   color: $text-subtitle;
   margin-top: 0.5rem;
 }
-
-/*
-
-  
-
-  &__legend {
-    li {
-      display: flex;
-      gap: 1rem;
-      font-size: 1.25rem;
-      font-weight: bold;
-
-
-      div {
-        display: flex;
-        flex-direction: column;
-        span:last-of-type {
-          font-size: 0.75rem;
-          font-weight: normal;
-          color: rgb(158, 158, 158);
-          margin-top: 0.5rem;
-        }
-      }
-    }
-  }
-}
-
-.sideMenu--hidden {
-  width: 0;
-  border-right: none;
-  & *:not(button) {
-    display: none;
-  }
-}
-*/

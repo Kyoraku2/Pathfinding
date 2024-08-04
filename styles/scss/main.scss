@@ -20,6 +20,7 @@ $text-subtitle: #6c757d;
 $success: #32b643;
 $danger: #e84600;
 $warning: #ffb700;
+$info: #2196f3;
 
 $navbar-height: 60px;
 $footer-height: 30px;
@@ -35,3 +36,4 @@ $sideMenuBack: #fff;
 @import "./footer.scss";
 @import "./side-menu.scss";
 @import "./body.scss";
+@import "./alert.scss";

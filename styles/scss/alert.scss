@@ -1,0 +1,48 @@
+.alert {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  width: 18rem;
+  height: 5rem;
+  color: #fff;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 5px;
+
+  &--success {
+    background: #04aa6d;
+  }
+
+  &--error {
+    background: #f44336;
+  }
+
+  &--info {
+    background: #2196f3;
+  }
+
+  &--warning {
+    background: #ff9800;
+  }
+
+  &__closeBtn {
+    font-weight: bold;
+    font-size: 2rem;
+    position: absolute;
+    top: 2px;
+    right: 8px;
+    cursor: pointer;
+  }
+
+  &__timer {
+    position: absolute;
+    bottom: 0;
+    left: 0rem;
+    background: rgba(#000, 0.25);
+    width: 0;
+    height: 0.5rem;
+    transition: width 5s linear;
+  }
+}
