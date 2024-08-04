@@ -15,6 +15,14 @@ class Algorithm {
     );
   }
 
+  async run(speed) {
+    if (this.checkpoints.length > 0) {
+      return this.runWithCheckpoints(speed);
+    } else {
+      return this.runUtils(this.start, this.endPointList, speed);
+    }
+  }
+
   async runWithCheckpoints(speed) {
     let path = [];
     for (let i = 0; i < this.checkpoints.length; i++) {
@@ -41,7 +49,7 @@ class Algorithm {
     return path;
   }
 
-  run() {
+  async runutils() {
     throw new Error(
       "Method not implemented. Shouldn't use instance of Agorithm. Use specific instance instead"
     );
@@ -51,14 +59,6 @@ class Algorithm {
 class BFS extends Algorithm {
   constructor(board) {
     super("BFS", board);
-  }
-
-  async run(speed) {
-    if (this.checkpoints.length > 0) {
-      return this.runWithCheckpoints(speed);
-    } else {
-      return this.runUtils(this.start, this.endPointList, speed);
-    }
   }
 
   async runUtils(start, endPointList, speed) {
@@ -105,14 +105,6 @@ class DFS extends Algorithm {
     super("DFS", board);
   }
 
-  async run(speed) {
-    if (this.checkpoints.length > 0) {
-      return this.runWithCheckpoints(speed);
-    } else {
-      return this.runUtils(this.start, this.endPointList, speed);
-    }
-  }
-
   async runUtils(start, endPointList, speed) {
     const visited = {};
     const dfsUtils = async (current, visited, speed) => {
@@ -145,14 +137,6 @@ class DFS extends Algorithm {
 class Dijkstra extends Algorithm {
   constructor(board) {
     super("Dijkstra", board);
-  }
-
-  async run(speed) {
-    if (this.checkpoints.length > 0) {
-      return this.runWithCheckpoints(speed);
-    } else {
-      return this.runUtils(this.start, this.endPointList, speed);
-    }
   }
 
   async runUtils(start, ends, speed) {
@@ -204,6 +188,10 @@ class Dijkstra extends Algorithm {
       }
     }
 
+    if (!path.length) {
+      return [];
+    }
+
     return path.concat(smallest).reverse();
   }
 }
@@ -221,14 +209,6 @@ class AStar extends Algorithm {
 class BellmanFord extends Algorithm {
   constructor(board) {
     super("Bellman-Ford", board);
-  }
-
-  async run(speed) {
-    if (this.checkpoints.length > 0) {
-      return this.runWithCheckpoints(speed);
-    } else {
-      return this.runUtils(this.start, this.endPointList, speed);
-    }
   }
 
   async runUtils(start, endPointList) {
