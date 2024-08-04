@@ -15,6 +15,32 @@ class Algorithm {
     );
   }
 
+  async runWithCheckpoints(speed) {
+    let path = [];
+    for (let i = 0; i < this.checkpoints.length; i++) {
+      const start = i == 0 ? this.start : this.checkpoints[i - 1];
+      const end = this.checkpoints[i];
+      const subPath = await this.runUtils(start, [end], speed);
+      if (subPath?.length > 0) {
+        path = path.concat(subPath);
+      } else {
+        return [];
+      }
+    }
+    const lastCheckpoint = this.checkpoints[this.checkpoints.length - 1];
+    const subPath = await this.runUtils(
+      lastCheckpoint,
+      this.endPointList,
+      speed
+    );
+    if (subPath?.length > 0) {
+      path = path.concat(subPath);
+    } else {
+      return [];
+    }
+    return path;
+  }
+
   run() {
     throw new Error(
       "Method not implemented. Shouldn't use instance of Agorithm. Use specific instance instead"
@@ -33,28 +59,6 @@ class BFS extends Algorithm {
     } else {
       return this.runUtils(this.start, this.endPointList, speed);
     }
-  }
-
-  async runWithCheckpoints(speed) {
-    let path = [];
-    for (let i = 0; i < this.checkpoints.length; i++) {
-      let start = i == 0 ? this.start : this.checkpoints[i - 1];
-      let end = this.checkpoints[i];
-      let subPath = await this.runUtils(start, [end], speed);
-      if (subPath?.length > 0) {
-        path = path.concat(subPath);
-      } else {
-        return [];
-      }
-    }
-    let lastCheckpoint = this.checkpoints[this.checkpoints.length - 1];
-    let subPath = await this.runUtils(lastCheckpoint, this.endPointList, speed);
-    if (subPath?.length > 0) {
-      path = path.concat(subPath);
-    } else {
-      return [];
-    }
-    return path;
   }
 
   async runUtils(start, endPointList, speed) {
@@ -109,28 +113,6 @@ class DFS extends Algorithm {
     }
   }
 
-  async runWithCheckpoints(speed) {
-    let path = [];
-    for (let i = 0; i < this.checkpoints.length; i++) {
-      let start = i == 0 ? this.start : this.checkpoints[i - 1];
-      let end = this.checkpoints[i];
-      let subPath = await this.runUtils(start, [end], speed);
-      if (subPath?.length > 0) {
-        path = path.concat(subPath);
-      } else {
-        return [];
-      }
-    }
-    let lastCheckpoint = this.checkpoints[this.checkpoints.length - 1];
-    let subPath = await this.runUtils(lastCheckpoint, this.endPointList, speed);
-    if (subPath?.length > 0) {
-      path = path.concat(subPath);
-    } else {
-      return [];
-    }
-    return path;
-  }
-
   async runUtils(start, endPointList, speed) {
     const visited = {};
     const dfsUtils = async (current, visited, speed) => {
@@ -171,28 +153,6 @@ class Dijkstra extends Algorithm {
     } else {
       return this.runUtils(this.start, this.endPointList, speed);
     }
-  }
-
-  async runWithCheckpoints(speed) {
-    let path = [];
-    for (let i = 0; i < this.checkpoints.length; i++) {
-      let start = i == 0 ? this.start : this.checkpoints[i - 1];
-      let end = this.checkpoints[i];
-      let subPath = await this.runUtils(start, [end], speed);
-      if (subPath?.length > 0) {
-        path = path.concat(subPath);
-      } else {
-        return [];
-      }
-    }
-    let lastCheckpoint = this.checkpoints[this.checkpoints.length - 1];
-    let subPath = await this.runUtils(lastCheckpoint, this.endPointList, speed);
-    if (subPath?.length > 0) {
-      path = path.concat(subPath);
-    } else {
-      return [];
-    }
-    return path;
   }
 
   async runUtils(start, ends, speed) {
@@ -269,28 +229,6 @@ class BellmanFord extends Algorithm {
     } else {
       return this.runUtils(this.start, this.endPointList, speed);
     }
-  }
-
-  async runWithCheckpoints() {
-    let path = [];
-    for (let i = 0; i < this.checkpoints.length; i++) {
-      let start = i == 0 ? this.start : this.checkpoints[i - 1];
-      let end = this.checkpoints[i];
-      let subPath = await this.runUtils(start, [end], speed);
-      if (subPath?.length > 0) {
-        path = path.concat(subPath);
-      } else {
-        return [];
-      }
-    }
-    let lastCheckpoint = this.checkpoints[this.checkpoints.length - 1];
-    let subPath = await this.runUtils(lastCheckpoint, this.endPointList, speed);
-    if (subPath?.length > 0) {
-      path = path.concat(subPath);
-    } else {
-      return [];
-    }
-    return path;
   }
 
   async runUtils(start, endPointList) {
