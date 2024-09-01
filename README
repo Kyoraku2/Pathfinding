@@ -2,4 +2,9 @@ Tasks to do :
 
 - Add export/import function
 - Implements all algorithms (maze & pathfinding)
-- Implements designed alert instead of alert (started, ended, error...)
+- Write proper README file
+- Add a first time usage tutorial (with pics & stuff)
+
+Inbox :
+
+- Add title to visited cell to show how far the cell is from the starting point

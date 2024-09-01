@@ -21,3 +21,19 @@ export const random = (min, max) =>
  * @description Get the cell id
  */
 export const getCellId = (x, y) => x + ";" + y;
+
+export const randomOdd = (min, max) => {
+  let num = random(min, max);
+  if (num % 2 === 0) {
+    num += 1;
+  }
+  return num;
+};
+
+export const randomEven = (min, max) => {
+  let num = random(min, max);
+  if (num % 2 !== 0) {
+    num += 1;
+  }
+  return num;
+};

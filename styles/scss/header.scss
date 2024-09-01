@@ -114,6 +114,7 @@ nav form input:checked + label {
 }
 
 nav .submenu:hover ul {
+  position: absolute;
   display: flex;
   flex-direction: column;
   z-index: 100;
@@ -133,4 +134,8 @@ nav .submenu:hover ul li {
 nav .submenu:hover i {
   transform: rotate(180deg);
   transition: transform ease 0.3s;
+}
+
+#speed span {
+  margin-left: 4px;
 }

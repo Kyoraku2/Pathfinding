@@ -1,8 +1,10 @@
-import { AlgorithmFactory } from "./algorithm.js";
-import { Board, CELLS_TYPES } from "./board.js";
+import { PathfindingAlgorithmFactory } from "./pathfinding-algorithm.js";
+import { MazeAlgorithmFactory } from "./maze-algorithm.js";
+import { Board } from "./board.js";
 import { CELLS_SIZE, SPEED_LIST } from "./consts.js";
 import { sleep } from "./function.utils.js";
 import { ALERT_TYPES, createAlert } from "./alert.js";
+import { CELLS_TYPES } from "./cell.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   const sideMenu = document.getElementsByTagName("aside")[0];
@@ -17,7 +19,10 @@ document.addEventListener("DOMContentLoaded", function () {
   let algoIsRunning = false;
   let selectedCellType = CELLS_TYPES.WALL;
   let currentSpeed = 1;
-  let selectedAlgorithm = "Bellman-Ford";
+  let selectedAlgorithm = {
+    name: "Dijkstra",
+    isPathfinding: true,
+  };
 
   document.addEventListener("mousedown", function (event) {
     if (algoIsRunning) {
@@ -63,12 +68,28 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    if (event.target.dataset.algorithm) {
-      selectedAlgorithm = event.target.dataset.algorithm;
+    if (event.target.dataset.pathfinding) {
+      selectedAlgorithm = {
+        name: event.target.dataset.pathfinding,
+        isPathfinding: true,
+      };
       createAlert(
         ALERT_TYPES.INFO,
         "Changed algorithm:",
-        "You have selected " + selectedAlgorithm + " algorithm."
+        `You have selected ${selectedAlgorithm.name} pathfinding algorithm.`
+      );
+      return;
+    }
+
+    if (event.target.dataset.maze) {
+      selectedAlgorithm = {
+        name: event.target.dataset.maze,
+        isPathfinding: false,
+      };
+      createAlert(
+        ALERT_TYPES.INFO,
+        "Changed algorithm:",
+        `You have selected ${selectedAlgorithm.name} maze generation algorithm.`
       );
       return;
     }
@@ -120,6 +141,7 @@ document.addEventListener("DOMContentLoaded", function () {
       selectedCellType = parseInt(event.target.value);
       return;
     }
+
     if (
       event.target.tagName == "A" ||
       event.target.tagName == "BUTTON" ||
@@ -141,7 +163,11 @@ document.addEventListener("DOMContentLoaded", function () {
           board.clear();
           break;
         case "run":
-          await runAlgorithm();
+          if (selectedAlgorithm.isPathfinding) {
+            await runPathfindingAlgorithm();
+          } else {
+            await runMazeGenerationAlgorithm();
+          }
           break;
         default:
           return;
@@ -149,7 +175,28 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
-  const runAlgorithm = async () => {
+  const runMazeGenerationAlgorithm = async () => {
+    board.clearVisited();
+    board.clearPath();
+    algoIsRunning = true;
+    createAlert(
+      ALERT_TYPES.INFO,
+      "Algorithm is running:",
+      `${selectedAlgorithm.name} algorithm is running, wait for the result.`
+    );
+    await MazeAlgorithmFactory.create(selectedAlgorithm.name, board).run(
+      SPEED_LIST[currentSpeed]
+    );
+    algoIsRunning = false;
+    createAlert(
+      ALERT_TYPES.SUCCESS,
+      "Maze generated:",
+      `${selectedAlgorithm.name} maze has been generated.
+      You can now run a pathfinding algorithm.`
+    );
+  };
+
+  const runPathfindingAlgorithm = async () => {
     if (!board.startPointIsDefined() || !board.endPointIsDefined()) {
       createAlert(
         ALERT_TYPES.ERROR,
@@ -164,11 +211,12 @@ document.addEventListener("DOMContentLoaded", function () {
     createAlert(
       ALERT_TYPES.INFO,
       "Algorithm is running:",
-      `${selectedAlgorithm} algorithm is running, wait for the result.`
+      `${selectedAlgorithm.name} algorithm is running, wait for the result.`
     );
-    const path = await AlgorithmFactory.create(selectedAlgorithm, board).run(
-      SPEED_LIST[currentSpeed]
-    );
+    const path = await PathfindingAlgorithmFactory.create(
+      selectedAlgorithm.name,
+      board
+    ).run(SPEED_LIST[currentSpeed]);
     algoIsRunning = false;
     if (!path || path.length === 0) {
       createAlert(
@@ -188,16 +236,13 @@ document.addEventListener("DOMContentLoaded", function () {
     for (const cell of path) {
       const [x, y] = cell.split(";");
       if (
-        board.getCellType(x, y) !== CELLS_TYPES.VISITED &&
-        board.getCellType(x, y) !== CELLS_TYPES.EMPTY &&
-        board.getCellType(x, y) !== CELLS_TYPES.PATH
+        !board.getCell(x, y).isVisited() &&
+        !board.getCell(x, y).isEmpty() &&
+        !board.getCell(x, y).isPath()
       ) {
         continue;
       }
-      if (
-        board.getCellType(x, y) === CELLS_TYPES.VISITED ||
-        board.getCellType(x, y) === CELLS_TYPES.EMPTY
-      ) {
+      if (board.getCell(x, y).isVisited() || board.getCell(x, y).isEmpty()) {
         board.clearCell(x, y);
       }
       board.markCellAsPath(x, y);

@@ -1,12 +1,4 @@
-export const CELLS_TYPES = {
-  EMPTY: 0,
-  WALL: 1,
-  START: 2,
-  END: 3,
-  CHECKPOINT: 4,
-  VISITED: 5,
-  PATH: 6,
-};
+import { Cell, CheckpointCell, EmptyCell, EndCell, StartCell } from "./cell.js";
 
 export class Board {
   /**
@@ -20,13 +12,13 @@ export class Board {
     this.columns = columns;
     /** @type {number} */
     this.rows = rows;
-    /** @type {number[][]} */
+    /** @type {Cell[][]} */
     this.graph = [];
-    /** @type {{x: number, y: number}} */
-    this.startPoint = { x: 0, y: 0 };
-    /** @type {{x: number, y: number}[]} */
+    /** @type {StartCell | undefined} */
+    this.startPoint = undefined;
+    /** @type {EndCell[]} */
     this.endPointList = [];
-    /** @type {{x: number, y: number}[]} */
+    /** @type {CheckpointCell[]} */
     this.checkpointList = [];
 
     this.createGride();
@@ -46,7 +38,7 @@ export class Board {
         cell.id = row + ";" + column;
         cell.dataset.cell = "";
         cell.style.opacity = "1";
-        this.graph[row][column] = CELLS_TYPES.EMPTY;
+        this.graph[row][column] = new EmptyCell(row, column, cell);
         rowElement.appendChild(cell);
       }
       table.appendChild(rowElement);
@@ -62,22 +54,18 @@ export class Board {
    */
   markCellAsStart(x, y) {
     if (
-      this.startPoint.x == x &&
-      this.startPoint.y == y &&
-      this.graph[x][y] == CELLS_TYPES.START
+      this.startPoint?.x === x &&
+      this.startPoint?.y === y &&
+      this.graph[x][y].isStart()
     ) {
       return;
     }
-    if (this.startPoint.x != undefined && this.startPoint.y != undefined) {
-      this.clearCell(this.startPoint.x, this.startPoint.y);
+    if (this.startPointIsDefined()) {
+      this.graph[this.startPoint.x][this.startPoint.y] =
+        this.graph[this.startPoint.x][this.startPoint.y].toEmpty();
     }
-    this.graph[x][y] = CELLS_TYPES.START;
-    this.startPoint.x = x;
-    this.startPoint.y = y;
-    const cell = document.getElementById(x + ";" + y);
-    if (!cell.classList.contains("start")) {
-      cell.classList.add("start");
-    }
+    this.graph[x][y] = this.graph[x][y].toStart();
+    this.startPoint = this.graph[x][y];
   }
 
   /**
@@ -87,18 +75,11 @@ export class Board {
    * @description Mark the cell as end point
    */
   markCellAsEnd(x, y) {
-    if (this.endPointList.some((end) => end.x == x && end.y == y)) {
+    if (this.graph[x][y].isEnd()) {
       return;
     }
-    if (this.graph[x][y] == CELLS_TYPES.END) {
-      return;
-    }
-    this.graph[x][y] = CELLS_TYPES.END;
-    this.endPointList.push({ x: x, y: y });
-    const cell = document.getElementById(x + ";" + y);
-    if (!cell.classList.contains("end")) {
-      cell.classList.add("end");
-    }
+    this.graph[x][y] = this.graph[x][y].toEnd();
+    this.endPointList.push(this.graph[x][y]);
   }
 
   /**
@@ -108,11 +89,7 @@ export class Board {
    * @returns {void}
    */
   markCellAsEmpty(x, y) {
-    this.graph[x][y] = CELLS_TYPES.EMPTY;
-    const cell = document.getElementById(x + ";" + y);
-    cell.classList = [];
-    cell.textContent = "";
-    cell.style.opacity = "1";
+    this.graph[x][y] = this.graph[x][y].toEmpty();
   }
 
   /**
@@ -122,14 +99,10 @@ export class Board {
    * @returns {void}
    */
   markCellAsWall(x, y) {
-    if (this.graph[x][y] == CELLS_TYPES.WALL) {
+    if (this.graph[x][y].isWall()) {
       return;
     }
-    this.graph[x][y] = CELLS_TYPES.WALL;
-    const cell = document.getElementById(x + ";" + y);
-    if (!cell.classList.contains("wall")) {
-      cell.classList.add("wall");
-    }
+    this.graph[x][y] = this.graph[x][y].toWall();
   }
 
   /**
@@ -139,15 +112,10 @@ export class Board {
    * @returns {void}
    */
   markCellAsVisited(x, y) {
-    const cell = document.getElementById(x + ";" + y);
-    this.graph[x][y] = CELLS_TYPES.VISITED;
-    if (!cell.classList.contains("visited")) {
-      cell.classList.add("visited");
-      cell.style.opacity = "0.4";
+    if (this.graph[x][y].isVisited()) {
+      this.graph[x][y].visit(); // TODO : check this
     } else {
-      let opacity = parseFloat(cell.style.opacity);
-      opacity += 0.2;
-      cell.style.opacity = opacity;
+      this.graph[x][y] = this.graph[x][y].toVisited();
     }
   }
 
@@ -158,35 +126,20 @@ export class Board {
    * @returns {void}
    */
   markCellAsCheckpoint(x, y) {
-    if (
-      this.checkpointList.some(
-        (checkpoint) => checkpoint.x == x && checkpoint.y == y
-      )
-    ) {
+    if (this.graph[x][y].isCheckpoint()) {
       return;
     }
-    if (this.graph[x][y] == CELLS_TYPES.CHECKPOINT) {
-      return;
-    }
-    this.graph[x][y] = CELLS_TYPES.CHECKPOINT;
-    this.checkpointList.push({ x: x, y: y });
-    const cell = document.getElementById(x + ";" + y);
-    cell.textContent = this.checkpointList.length;
-    if (!cell.classList.contains("checkpoint")) {
-      cell.classList.add("checkpoint");
-    }
+    this.graph[x][y] = this.graph[x][y].toCheckpoint(
+      this.checkpointList.length + 1
+    );
+    this.checkpointList.push(this.graph[x][y]);
   }
 
   markCellAsPath(x, y) {
-    this.graph[x][y] = CELLS_TYPES.PATH;
-    const cell = document.getElementById(x + ";" + y);
-    if (!cell.classList.contains("path")) {
-      cell.classList.add("path");
-      cell.style.opacity = "0.4";
+    if (this.graph[x][y].isPath()) {
+      this.graph[x][y].visit(); // TODO : check this
     } else {
-      let opacity = parseFloat(cell.style.opacity);
-      opacity += 0.2;
-      cell.style.opacity = opacity;
+      this.graph[x][y] = this.graph[x][y].toPath();
     }
   }
 
@@ -197,29 +150,26 @@ export class Board {
    * @returns {void}
    */
   clearCell(x, y) {
-    const cell = document.getElementById(x + ";" + y);
-    if (this.graph[x][y] == CELLS_TYPES.START) {
-      this.startPoint = {};
+    if (this.graph[x][y].isStart()) {
+      this.startPoint = undefined;
     }
-    if (this.graph[x][y] == CELLS_TYPES.END) {
+    if (this.graph[x][y].isEnd()) {
       this.endPointList = this.endPointList.filter(
-        (end) => end.x != x && end.y != y
+        (end) => end.x !== Number(x) && end.y !== Number(y)
       );
     }
-    if (this.graph[x][y] == CELLS_TYPES.CHECKPOINT) {
-      this.checkpointList = this.checkpointList.filter(
-        (checkpoint) => checkpoint.x != x && checkpoint.y != y
-      );
+    if (this.graph[x][y].isCheckpoint()) {
+      this.checkpointList = this.checkpointList
+        .filter(
+          (checkpoint) =>
+            checkpoint.x !== Number(x) || checkpoint.y !== Number(y)
+        )
+        .sort((a, b) => a.id - b.id);
       this.checkpointList.forEach((checkpoint, index) => {
-        document.getElementById(checkpoint.x + ";" + checkpoint.y).textContent =
-          index + 1;
+        checkpoint.setId(index + 1);
       });
     }
-    this.graph[x][y] = CELLS_TYPES.EMPTY;
-    cell.classList = [];
-    cell.textContent = "";
-    cell.dataset.cell = "";
-    cell.style.opacity = "1";
+    this.graph[x][y] = this.graph[x][y].toEmpty();
   }
 
   /**
@@ -228,11 +178,11 @@ export class Board {
    */
   clear() {
     this.graph.forEach((row, rowIndex) => {
-      row.forEach((cell, columnIndex) => {
+      row.forEach((_, columnIndex) => {
         this.clearCell(rowIndex, columnIndex);
       });
     });
-    this.startPoint = {};
+    this.startPoint = undefined;
     this.endPointList = [];
     this.checkpointList = [];
   }
@@ -244,7 +194,7 @@ export class Board {
   clearPath() {
     this.graph.forEach((row, rowIndex) => {
       row.forEach((cell, columnIndex) => {
-        if (cell == CELLS_TYPES.PATH) {
+        if (cell.isPath()) {
           this.clearCell(rowIndex, columnIndex);
         }
       });
@@ -258,7 +208,7 @@ export class Board {
   clearVisited() {
     this.graph.forEach((row, rowIndex) => {
       row.forEach((cell, columnIndex) => {
-        if (cell == CELLS_TYPES.VISITED) {
+        if (cell.isVisited()) {
           this.clearCell(rowIndex, columnIndex);
         }
       });
@@ -274,8 +224,7 @@ export class Board {
     for (let row = 0; row < this.rows; ++row) {
       adjacencyMatrix[row] = [];
       for (let column = 0; column < this.columns; ++column) {
-        adjacencyMatrix[row][column] =
-          this.graph[row][column] == CELLS_TYPES.WALL ? 0 : 1;
+        adjacencyMatrix[row][column] = this.graph[row][column].isWall() ? 0 : 1;
       }
     }
     return adjacencyMatrix;
@@ -288,27 +237,24 @@ export class Board {
     let adjacencyList = {};
     for (let row = 0; row < this.rows; ++row) {
       for (let column = 0; column < this.columns; ++column) {
-        if (this.graph[row][column] == CELLS_TYPES.WALL) {
+        if (this.graph[row][column].isWall()) {
           continue;
         }
 
         let key = row + ";" + column;
         adjacencyList[key] = [];
-        if (row > 0 && this.graph[row - 1][column] != CELLS_TYPES.WALL) {
+        if (row > 0 && !this.graph[row - 1][column].isWall()) {
           adjacencyList[key].push(row - 1 + ";" + column);
         }
-        if (column > 0 && this.graph[row][column - 1] != CELLS_TYPES.WALL) {
+        if (column > 0 && !this.graph[row][column - 1].isWall()) {
           adjacencyList[key].push(row + ";" + (column - 1));
         }
-        if (
-          row < this.rows - 1 &&
-          this.graph[row + 1][column] != CELLS_TYPES.WALL
-        ) {
+        if (row < this.rows - 1 && !this.graph[row + 1][column].isWall()) {
           adjacencyList[key].push(row + 1 + ";" + column);
         }
         if (
           column < this.columns - 1 &&
-          this.graph[row][column + 1] != CELLS_TYPES.WALL
+          !this.graph[row][column + 1].isWall()
         ) {
           adjacencyList[key].push(row + ";" + (column + 1));
         }
@@ -321,10 +267,10 @@ export class Board {
   /**
    * @param {number} x
    * @param {number} y
-   * @returns {number}
-   * @description Get the cell type
+   * @returns {Cell}
+   * @description Get the cell
    */
-  getCellType(x, y) {
+  getCell(x, y) {
     return this.graph[x][y];
   }
 
@@ -333,7 +279,7 @@ export class Board {
    * @returns {boolean}
    */
   startPointIsDefined() {
-    return this.startPoint.x != undefined && this.startPoint.y != undefined;
+    return this.startPoint !== undefined;
   }
 
   /**

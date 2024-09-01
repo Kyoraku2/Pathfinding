@@ -1,9 +1,8 @@
-import { PriorityQueue } from "./algorithmUtils.js";
-import { CELLS_TYPES } from "./board.js";
+import { PriorityQueue } from "./pathfinding-algorithm.utils.js";
 import { sleep } from "./function.utils.js";
 
-class Algorithm {
-  constructor(name = "Algorithm", board) {
+class PathFindingAlgorithm {
+  constructor(name = "Pathfinding Algorithm", board) {
     this.name = name;
     this.board = board;
     this.adjacencyMatrix = board.toAdjacencyMatrix();
@@ -49,14 +48,14 @@ class Algorithm {
     return path;
   }
 
-  async runutils() {
+  async runUtils() {
     throw new Error(
       "Method not implemented. Shouldn't use instance of Agorithm. Use specific instance instead"
     );
   }
 }
 
-class BFS extends Algorithm {
+class BFS extends PathFindingAlgorithm {
   constructor(board) {
     super("BFS", board);
   }
@@ -87,8 +86,8 @@ class BFS extends Algorithm {
           queue.push(neighbor);
           const [x, y] = neighbor.split(";").map((n) => parseInt(n));
           if (
-            this.board.getCellType(x, y) === CELLS_TYPES.EMPTY ||
-            this.board.getCellType(x, y) === CELLS_TYPES.VISITED
+            this.board.getCell(x, y).isEmpty() ||
+            this.board.getCell(x, y).isVisited()
           ) {
             await sleep(speed);
             this.board.markCellAsVisited(x, y);
@@ -100,7 +99,7 @@ class BFS extends Algorithm {
   }
 }
 
-class DFS extends Algorithm {
+class DFS extends PathFindingAlgorithm {
   constructor(board) {
     super("DFS", board);
   }
@@ -111,8 +110,8 @@ class DFS extends Algorithm {
       visited[current] = true;
       const [x, y] = current.split(";").map((n) => parseInt(n));
       if (
-        this.board.getCellType(x, y) === CELLS_TYPES.EMPTY ||
-        this.board.getCellType(x, y) === CELLS_TYPES.VISITED
+        this.board.getCell(x, y).isEmpty() ||
+        this.board.getCell(x, y).isVisited()
       ) {
         await sleep(speed);
         this.board.markCellAsVisited(x, y);
@@ -134,7 +133,7 @@ class DFS extends Algorithm {
   }
 }
 
-class Dijkstra extends Algorithm {
+class Dijkstra extends PathFindingAlgorithm {
   constructor(board) {
     super("Dijkstra", board);
   }
@@ -177,8 +176,8 @@ class Dijkstra extends Algorithm {
             previous[nextNode] = smallest;
             nodes.enqueue(nextNode, candidate);
             if (
-              this.board.getCellType(x, y) === CELLS_TYPES.EMPTY ||
-              this.board.getCellType(x, y) === CELLS_TYPES.VISITED
+              this.board.getCell(x, y).isEmpty() ||
+              this.board.getCell(x, y).isVisited()
             ) {
               await sleep(speed);
               this.board.markCellAsVisited(x, y);
@@ -196,7 +195,7 @@ class Dijkstra extends Algorithm {
   }
 }
 
-class AStar extends Algorithm {
+class AStar extends PathFindingAlgorithm {
   constructor(board) {
     super("A*", board);
   }
@@ -206,7 +205,7 @@ class AStar extends Algorithm {
   }
 }
 
-class BellmanFord extends Algorithm {
+class BellmanFord extends PathFindingAlgorithm {
   constructor(board) {
     super("Bellman-Ford", board);
   }
@@ -232,8 +231,8 @@ class BellmanFord extends Algorithm {
           previous[edge.to] = edge.from;
           const [x, y] = edge.to.split(";").map((n) => parseInt(n));
           if (
-            this.board.getCellType(x, y) === CELLS_TYPES.EMPTY ||
-            this.board.getCellType(x, y) === CELLS_TYPES.VISITED
+            this.board.getCell(x, y).isEmpty() ||
+            this.board.getCell(x, y).isVisited()
           ) {
             await sleep(speed);
             this.board.markCellAsVisited(x, y);
@@ -272,7 +271,7 @@ class BellmanFord extends Algorithm {
   }
 }
 
-class AlgorithmFactory {
+class PathfindingAlgorithmFactory {
   static create(name, board) {
     switch (name) {
       case "BFS":
@@ -286,9 +285,9 @@ class AlgorithmFactory {
       case "Bellman-Ford":
         return new BellmanFord(board);
       default:
-        return new Algorithm(name, board);
+        throw new Error("Invalid Pathfinding Algorithm");
     }
   }
 }
 
-export { AlgorithmFactory };
+export { PathfindingAlgorithmFactory };
