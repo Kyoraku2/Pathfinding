@@ -9,36 +9,6 @@ class MazeAlgorithm {
   }
 }
 
-class MazeDFS extends MazeAlgorithm {
-  constructor(board) {
-    super("DFS", board);
-  }
-
-  async run() {
-    // TODO
-  }
-}
-
-class Prim extends MazeAlgorithm {
-  constructor(board) {
-    super("Prim", board);
-  }
-
-  async run(speed) {
-    throw new Error("Method not implemented.");
-  }
-}
-
-class Kruskal extends MazeAlgorithm {
-  constructor(board) {
-    super("Kruskal", board);
-  }
-
-  async run(speed) {
-    throw new Error("Method not implemented.");
-  }
-}
-
 class RecursiveDivision extends MazeAlgorithm {
   constructor(board) {
     super("Recursive Division", board);
@@ -108,15 +78,68 @@ class RecursiveDivision extends MazeAlgorithm {
   }
 }
 
+class Sidewinder extends MazeAlgorithm {
+  constructor(board) {
+    super("Sidewinder", board);
+    this.height = board.graph.length;
+    this.width = board.graph[0].length;
+    this.initiationSpeed = 1;
+  }
+
+  initializeBoard() {
+    for (let i = 0; i < this.height; i++) {
+      for (let j = 0; j < this.width; j++) {
+        this.board.markCellAsWall(i, j);
+      }
+    }
+  }
+
+  async run(speed) {
+    this.speed = speed;
+    this.initializeBoard();
+    await this.generateMaze();
+  }
+
+  async generateMaze() {
+    for (let y = 0; y < this.height; y += 2) {
+      let run = [];
+      for (let x = 0; x < this.width; x += 2) {
+        run.push([y, x]);
+        if (x + 2 < this.width && (Math.random() < 0.5 || y === 0)) {
+          run = await this.carveEast(run);
+        } else if (y > 0) {
+          run = await this.carveNorth(run);
+        }
+      }
+    }
+  }
+
+  async carveEast(run) {
+    const [i, j] = run[run.length - 1];
+    this.board.markCellAsEmpty(i, j);
+    this.board.markCellAsEmpty(i, j + 1);
+    this.board.markCellAsEmpty(i, j + 2);
+    await sleep(this.speed);
+    run.push([i, j + 2]);
+
+    return run;
+  }
+
+  async carveNorth(run) {
+    const [i, j] = run[Math.floor(Math.random() * run.length)];
+    this.board.markCellAsEmpty(i, j);
+    this.board.markCellAsEmpty(i - 1, j);
+    this.board.markCellAsEmpty(i - 2, j);
+    await sleep(this.speed);
+    return [];
+  }
+}
+
 class MazeAlgorithmFactory {
   static create(name, board) {
     switch (name) {
-      case "DFS":
-        return new MazeDFS(board);
-      case "Prim":
-        return new Prim(board);
-      case "Kruskal":
-        return new Kruskal(board);
+      case "Sidewinder":
+        return new Sidewinder(board);
       case "Recursive Division":
         return new RecursiveDivision(board);
       default:
